@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lin_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_3dp"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/_38dp"
+        android:text="张三"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_14sp" />
+
+    <TextView
+        android:id="@+id/tv_procedureName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/_68dp"
+        android:text="工序："
+        android:textColor="@color/c_666666"
+        android:textSize="@dimen/_14sp" />
+
+    <TextView
+        android:id="@+id/tv_fqty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_userName"
+        android:text="数量："
+        android:textColor="@color/c_666666"
+        android:textSize="@dimen/_12sp" />
+
+    <TextView
+        android:id="@+id/tv_reportTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tv_userName"
+        android:text="报工时间："
+        android:maxLength="19"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sp" />
+
+    <View
+        android:id="@+id/view_del"
+        android:layout_width="@dimen/_38dp"
+        android:layout_height="@dimen/_38dp"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/ico_del2" />
+
+    <TextView
+        android:id="@+id/tv_classesName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view_del"
+        android:text="产品类别："
+        android:textColor="@color/c_666666"
+        android:textSize="@dimen/_12sp" />
+
+    <TextView
+        android:id="@+id/tv_row"
+        android:layout_width="38dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/view_del"
+        android:layout_marginLeft="@dimen/_3dp"
+        android:background="@color/c_666666"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_12sp" />
+
+
+    <TextView
+        android:id="@+id/tv_styleName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_classesName"
+        android:text="款式："
+        android:textColor="@color/c_666666"
+        android:textSize="@dimen/_12sp" />
+
+    <TextView
+        android:id="@+id/tv_structureName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tv_classesName"
+        android:text="结构："
+        android:textColor="@color/c_666666"
+        android:textSize="@dimen/_12sp" />
+
+</RelativeLayout>
