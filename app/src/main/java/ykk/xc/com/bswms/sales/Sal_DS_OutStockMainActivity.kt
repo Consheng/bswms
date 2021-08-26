@@ -28,11 +28,13 @@ import ykk.xc.com.bswms.bean.ExpressNoData
 import ykk.xc.com.bswms.comm.BaseActivity
 import ykk.xc.com.bswms.comm.BaseFragment
 import ykk.xc.com.bswms.comm.Comm
+import ykk.xc.com.bswms.util.Base64Utils
 import ykk.xc.com.bswms.util.adapter.BaseFragmentAdapter
 import ykk.xc.com.bswms.util.blueTooth.*
 import ykk.xc.com.bswms.util.blueTooth.Constant.MESSAGE_UPDATE_PARAMETER
 import ykk.xc.com.bswms.util.blueTooth.DeviceConnFactoryManager.CONN_STATE_FAILED
 import java.text.DecimalFormat
+import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -59,6 +61,7 @@ class Sal_DS_OutStockMainActivity : BaseActivity() {
     private val PRINTER_COMMAND_ERROR = 0x008 // 使用打印机指令错误
     private val CONN_PRINTER = 0x12
     private var listMap = ArrayList<ExpressNoData>() // 打印保存的数据
+    var cainiaoPrintData :String? = null // 菜鸟打印数据
 
     override fun setLayoutResID(): Int {
         return R.layout.sal_ds_out_main
@@ -184,17 +187,23 @@ class Sal_DS_OutStockMainActivity : BaseActivity() {
     /**
      * Fragment回调得到数据
      */
-    fun setFragment1DataByPrint(list: List<ExpressNoData>) {
-        listMap.clear()
-        listMap.addAll(list)
+    fun setPrintData(list: List<ExpressNoData>?) {
+        if(cainiaoPrintData == null) {
+            listMap.clear()
+            listMap.addAll(list!!)
+        }
 
         if (isConnected) {
-            if(list[0].judge.equals("Y")) { //  是否为丰蜜接口格式打印
-                setFragment2Print(list)
+            if(cainiaoPrintData != null) {
+                byteFormatPrint()
             } else {
-                setFragment1Print(list)
+                if(list!![0].judge.equals("Y")) { //  是否为丰蜜接口格式打印
+                    setStartPrint_SFFM(list!!)
+                } else {
+                    setStartPrint_SF(list!!)
+                }
             }
-//            setFragment1Print(list)
+
         } else {
             // 打开蓝牙配对页面
             startActivityForResult(Intent(this, BluetoothDeviceListDialog::class.java), Constant.BLUETOOTH_REQUEST_CODE)
@@ -204,7 +213,7 @@ class Sal_DS_OutStockMainActivity : BaseActivity() {
     /**
      * 原顺丰打印
      */
-    private fun setFragment1Print(list: List<ExpressNoData>) {
+    private fun setStartPrint_SF(list: List<ExpressNoData>) {
         list.forEach {
             val curDate = Comm.getSysDate(0)
             val tsc = LabelCommand()
@@ -341,7 +350,7 @@ class Sal_DS_OutStockMainActivity : BaseActivity() {
     /**
      * 丰蜜格式打印
      */
-    private fun setFragment2Print(list: List<ExpressNoData>) {
+    private fun setStartPrint_SFFM(list: List<ExpressNoData>) {
         list.forEach {
             val curDate = Comm.getSysDate(0)
             val tsc = LabelCommand()
@@ -513,6 +522,34 @@ class Sal_DS_OutStockMainActivity : BaseActivity() {
         return null
     }
 
+    /**
+     * 菜鸟打印方式
+     */
+    private fun byteFormatPrint() {
+//        var str = "H4sIAAAAAAAAAKVVW08bRxR+R+I/rPwYDTBnZnZ3Jm/cKqG0gWIeovyH/CjbiVQItLaFs8R2sGuM7awDXjDYVaIkUlJFIg1tRVUpoijq7Npr72VIE3VXlj1H3/nOZc75nFy6u6gBxtNYu3cPAR/8mJxYWFpdnF9bWr6t4cmJ+W+TkxPJL0auLd5Z0zhHQlCUWEsmCZue+4YkEEYg38TTTjHjfmyn0Xv00Kk1P8YtO68d5/Ri53VizAYYhIrOBUad8+s1Czjf39BKbyv39/rV8omlmcV9n44QioDpEToi34RLMrtCtFtARsEZYiZXxS526x07Vdmw3thO58z6p/lxd+u4VLO6vx38ne3XrCel/LvKc61zdtLo5XOZrtN59fhhe/ekGKDWMVNR15/7GGCIk2iuHmb7opuyc+VffSSVbTK4skuVD+VP7YPtP+zT8qdWu/BLz8ps7m4NTqUL+zRIYYIymgvN/FCue9/rJ7ZzXqhvX9qnrXZzvd/LbIYoGKgo7O7hhptFKlO/LNRdt+3L3Hn98vhod6u5HsnCMJU1t7NXj68ym/n08VHLanWePmtYzn4nffjq8K9UOnsVolAPYD978L64l0rvlbpO6cfii1S60Wj/WWjlzvfe9eyfK0EKrh66Q/vZm1RmdEMEmRircAQTmMF8hhhBLFWmBfpNEDcxDSINZXSYgVGOskTODBXKbWh1J7RBTDlq2X6vWaxqmgZUFwQAU52FT5JkbnZ1fnlhUSNyZLk7Y0B4AjGXAiOKJPHCyi2KZb3CACJbFwpsKgN/xfoE2UDd6/CGjffHXd//UbjPQYmS48lWtV1ta94DnAiTS2nU9aCjrkz3a2QwrHFBblN59Z9XwdqDaZ/CEDoCql6T46OjM7sbaLwwvqQDN+Qz7IA/M9xEOiPDkZFT6M0MQ8a1MyPVliknv1DL/l75UHg5EnKp2npUmj0dL/8U0E+q1vqx4EgM06PVDXjqAYwwyX/yAI7d95hobvmOxhFhrrwhKjfcQNgvRRYIRHmdrsZV8/F3FFVIVxFNzXPN7fTTjx4M3iCcGEr43ODxkQz4tdB5/xlctCwL3IKoW5B3xjHL4GwKgeh1FsMUiEsX2YrAiFLlv2/ufb8cHGSu3LPhuAzDyYExOR3HJyxioFEEiyJ0YoYNbs4BAxjYM8kiBPExQhdhJ5A3FrFgKpBBYdQKeXTdJI8x7CCV8xejnpI9jFBNSfK4KYYSMZAAiFhMPVacZwunwHikSVOxPk4xKduR8jy/SH1B9u8H+mEwU4qPib5DOpqV96qQjSES5FoZ3EXy65Arq0u35Q4gCP38F/hW/ikICwAA"
+        // 发送数据
+        if (DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id] == null) {
+            return
+        }
+//        var byteArr = Base64Utils.decode(str.toCharArray())
+        var byteArr = Base64Utils.decode(cainiaoPrintData!!.toCharArray())
+        byteArr = Base64Utils.compress(byteArr)
+        // 解决打印重复打印的问题
+        // PRINT 1,1对应的byte值（80,82,73,78,84,32,49,44,49,13,10），如果末尾有两份这种一样的值，就删除后面一段
+        if(byteArr[byteArr.size-1].toInt() == 10 && byteArr[byteArr.size-2].toInt() == 13 && byteArr[byteArr.size-3].toInt() == 49 && byteArr[byteArr.size-4].toInt() == 44 && byteArr[byteArr.size-5].toInt() == 49 && byteArr[byteArr.size-6].toInt() == 32 && byteArr[byteArr.size-7].toInt() == 84 && byteArr[byteArr.size-8].toInt() == 78 && byteArr[byteArr.size-9].toInt() == 73 && byteArr[byteArr.size-10].toInt() == 82 && byteArr[byteArr.size-11].toInt() == 80 &&
+                byteArr[byteArr.size-12].toInt() == 10 && byteArr[byteArr.size-13].toInt() == 13 && byteArr[byteArr.size-14].toInt() == 49 && byteArr[byteArr.size-15].toInt() == 44 && byteArr[byteArr.size-16].toInt() == 49 && byteArr[byteArr.size-17].toInt() == 32 && byteArr[byteArr.size-18].toInt() == 84 && byteArr[byteArr.size-19].toInt() == 78 && byteArr[byteArr.size-20].toInt() == 73 && byteArr[byteArr.size-21].toInt() == 82 && byteArr[byteArr.size-22].toInt() == 80) {
+
+            val byteResult = ByteArray(byteArr.size-11)
+            System.arraycopy(byteArr, 0, byteResult, 0, byteResult.size)
+            byteArr = byteResult
+        }
+
+        val vbr = Vector<Byte>()
+        for(bt in byteArr.iterator()) {
+            vbr.add(bt)
+        }
+        DeviceConnFactoryManager.getDeviceConnFactoryManagers()[id].sendDataImmediately(vbr)
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -617,12 +654,16 @@ class Sal_DS_OutStockMainActivity : BaseActivity() {
                             tv_connState.setText(getString(R.string.str_conn_state_connected))
                             tv_connState.setTextColor(Color.parseColor("#008800")) // 已连接-绿色
                             // 连接成功，开始打印
-                            if(listMap[0].judge.equals("Y")) { //  是否为丰蜜接口格式打印
-                                setFragment2Print(listMap)
+                            if(cainiaoPrintData != null) {
+                                byteFormatPrint()
+
                             } else {
-                                setFragment1Print(listMap)
+                                if(listMap[0].judge.equals("Y")) { //  是否为丰蜜接口格式打印
+                                    setStartPrint_SFFM(listMap!!)
+                                } else {
+                                    setStartPrint_SF(listMap!!)
+                                }
                             }
-//                            setFragment1Print(listMap)
 
                             isConnected = true
                         }

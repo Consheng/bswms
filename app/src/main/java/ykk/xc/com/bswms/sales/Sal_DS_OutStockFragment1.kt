@@ -161,6 +161,16 @@ class Sal_DS_OutStockFragment1 : BaseFragment() {
                     }
                     SUCC3 -> { // 得到打印数据 进入
                         val list = JsonUtil.strToList(msgObj, ExpressNoData::class.java)
+                        /*if(msgObj!!.indexOf("ykk_jsonArr") > -1) {
+                            val list = JsonUtil.strToList(msgObj, ExpressNoData::class.java)
+                            m.parent!!.cainiaoPrintData = null
+                            m.parent!!.setPrintData(list) // 打印
+
+                        } else {
+                            m.parent!!.cainiaoPrintData = JsonUtil.strToString(msgObj)
+                            m.parent!!.setPrintData(null)
+                        }*/
+
                         if(m.checkDatas[m.curPos].expressNoData != null) {
                             m.checkDatas[m.curPos].expressNoData = list[0]
                             // 添加到（条码、快递单、订单号）记录表
@@ -220,7 +230,7 @@ class Sal_DS_OutStockFragment1 : BaseFragment() {
                     SUCC4 -> { // 预约数据 进入
                         m.toasts("预约成功，开始打印...")
                         val list = JsonUtil.strToList(msgObj, ExpressNoData::class.java)
-                        m.parent!!.setFragment1DataByPrint(list) // 打印
+                        m.parent!!.setPrintData(list) // 打印
                         list.forEach {
                             m.setBarcode_ExpressNo(-1, it.t01)
                         }
@@ -247,7 +257,7 @@ class Sal_DS_OutStockFragment1 : BaseFragment() {
                         },300)
 
                         // 保存后，打印快递单
-                        m.parent!!.setFragment1DataByPrint(m.listPrintDate) // 打印
+                        m.parent!!.setPrintData(m.listPrintDate) // 打印
 
                         // 汇报最后一个工序
                         if(m.btTmp != null) {
@@ -348,7 +358,7 @@ class Sal_DS_OutStockFragment1 : BaseFragment() {
 //                curPos = position
                 val listPrintDate = ArrayList<ExpressNoData>()
                 listPrintDate.add(entity.expressNoData)
-                parent!!.setFragment1DataByPrint(listPrintDate) // 打印
+                parent!!.setPrintData(listPrintDate) // 打印
 //                run_removeEntry(entity.id)
             }
         })
