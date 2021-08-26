@@ -161,15 +161,6 @@ class Sal_DS_OutStockFragment1 : BaseFragment() {
                     }
                     SUCC3 -> { // 得到打印数据 进入
                         val list = JsonUtil.strToList(msgObj, ExpressNoData::class.java)
-                        /*if(msgObj!!.indexOf("ykk_jsonArr") > -1) {
-                            val list = JsonUtil.strToList(msgObj, ExpressNoData::class.java)
-                            m.parent!!.cainiaoPrintData = null
-                            m.parent!!.setPrintData(list) // 打印
-
-                        } else {
-                            m.parent!!.cainiaoPrintData = JsonUtil.strToString(msgObj)
-                            m.parent!!.setPrintData(null)
-                        }*/
 
                         if(m.checkDatas[m.curPos].expressNoData != null) {
                             m.checkDatas[m.curPos].expressNoData = list[0]
@@ -257,7 +248,16 @@ class Sal_DS_OutStockFragment1 : BaseFragment() {
                         },300)
 
                         // 保存后，打印快递单
-                        m.parent!!.setPrintData(m.listPrintDate) // 打印
+//                        m.parent!!.setPrintData(m.listPrintDate) // 打印
+                        if(m.isNULLS(m.listPrintDate[0].caiNiaoPrintData).length == 0) {
+                            val list = JsonUtil.strToList(msgObj, ExpressNoData::class.java)
+                            m.parent!!.cainiaoPrintData = null
+                            m.parent!!.setPrintData(list) // 打印
+
+                        } else {
+                            m.parent!!.cainiaoPrintData = m.listPrintDate[0].caiNiaoPrintData
+                            m.parent!!.setPrintData(null)
+                        }
 
                         // 汇报最后一个工序
                         if(m.btTmp != null) {

@@ -35,7 +35,12 @@ public class ExpressNoData implements Serializable {
 	private String judge;				// 是否为丰蜜接口（Y:是）
 	private String printCount;			// 打印次数
 	private String  proCode;			// 时效类型图片
-
+	private String ids;
+	private String remark;
+	private String logisticsNo;  		// 物流公司代码
+	private String logisticsName;  		// 物流公司名称
+	private int jstOrderId;				// t_jstOrder表中的id
+	private String caiNiaoPrintData;	// 菜鸟打印数据
 
 	public ExpressNoData() {
 		super();
@@ -276,5 +281,52 @@ public class ExpressNoData implements Serializable {
 	public void setProCode(String proCode) {
 		this.proCode = proCode;
 	}
-	
+
+	public String getIds() {
+		return ids;
+	}
+
+	public void setIds(String ids) {
+		this.ids = ids;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public String getLogisticsNo() {
+		return logisticsNo;
+	}
+
+	public void setLogisticsNo(String logisticsNo) {
+		this.logisticsNo = logisticsNo;
+	}
+
+	public String getLogisticsName() {
+		return logisticsName;
+	}
+
+	public void setLogisticsName(String logisticsName) {
+		this.logisticsName = logisticsName;
+	}
+
+	public int getJstOrderId() {
+		return jstOrderId;
+	}
+
+	public void setJstOrderId(int jstOrderId) {
+		this.jstOrderId = jstOrderId;
+	}
+
+	public String getCaiNiaoPrintData() {
+		return caiNiaoPrintData;
+	}
+
+	public void setCaiNiaoPrintData(String caiNiaoPrintData) {
+		this.caiNiaoPrintData = caiNiaoPrintData;
+	}
 }
