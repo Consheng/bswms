@@ -16,8 +16,8 @@ android {
         applicationId 'ykk.xc.com.bswms'
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 73
-        versionName "1.7.3"
+        versionCode 74
+        versionName "1.7.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         resConfigs "en-rGB", "zh-rCN"  // 华为scan kit （“en-rGB”（英式英语） 和 “zh-rCN”（简体中文））
 

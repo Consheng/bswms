@@ -250,9 +250,8 @@ class Sal_DS_OutStockFragment1 : BaseFragment() {
                         // 保存后，打印快递单
 //                        m.parent!!.setPrintData(m.listPrintDate) // 打印
                         if(m.isNULLS(m.listPrintDate[0].caiNiaoPrintData).length == 0) {
-                            val list = JsonUtil.strToList(msgObj, ExpressNoData::class.java)
                             m.parent!!.cainiaoPrintData = null
-                            m.parent!!.setPrintData(list) // 打印
+                            m.parent!!.setPrintData(m.listPrintDate) // 打印
 
                         } else {
                             m.parent!!.cainiaoPrintData = m.listPrintDate[0].caiNiaoPrintData
@@ -358,7 +357,16 @@ class Sal_DS_OutStockFragment1 : BaseFragment() {
 //                curPos = position
                 val listPrintDate = ArrayList<ExpressNoData>()
                 listPrintDate.add(entity.expressNoData)
-                parent!!.setPrintData(listPrintDate) // 打印
+
+//                parent!!.setPrintData(listPrintDate) // 打印
+                if(isNULLS(listPrintDate[0].caiNiaoPrintData).length == 0) {
+                    parent!!.cainiaoPrintData = null
+                    parent!!.setPrintData(listPrintDate) // 打印
+
+                } else {
+                    parent!!.cainiaoPrintData = listPrintDate[0].caiNiaoPrintData
+                    parent!!.setPrintData(null)
+                }
 //                run_removeEntry(entity.id)
             }
         })
